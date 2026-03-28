@@ -1,3 +1,11 @@
+//
+//  FontPicker.swift
+//  lara
+//
+//  Created by ruter on 27.03.26.
+//
+
+
 import SwiftUI
 
 struct EditorView: View {
@@ -103,9 +111,14 @@ struct EditorView: View {
         mg["CacheExtra"] = c
 
         do {
-            let data = try PropertyListSerialization.data(fromPropertyList: mg, format: .xml, options: 0)
+            let data = try PropertyListSerialization.data(fromPropertyList: mg, format: .binary, options: 0)
             try data.write(to: modURL)
-            let ok = mgr.kfsoverwritewithdata(target: systemPath, data: data)
+            let targetSize = mgr.kfssize(path: systemPath)
+            if targetSize >= 0 && Int64(data.count) > targetSize {
+                status = "Failed: modified plist (\(data.count) bytes) is larger than target (\(targetSize) bytes). Reduce changes or size."
+                return
+            }
+            let ok = mgr.kfsoverwritefromlocalpath(target: systemPath, sourcePath: modURL.path)
             status = ok ? "Applied." : "Failed."
         } catch {
             status = error.localizedDescription

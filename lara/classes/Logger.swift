@@ -31,7 +31,57 @@ class Logger: ObservableObject {
         "Gesture: System gesture gate timed out",
         "tcp_output [",
         "Error Domain=",
-        "NSError"
+        "com.apple.UIKit.dragInitiation",
+        "OSLOG",
+        "_UISystemGestureGateGestureRecognizer",
+        "NSError",
+        "UITouch",
+        "com.apple",
+        "gestureRecognizers",
+        "graph: {(",
+        "UILongPressGestureRecognizer",
+        "UIScrollViewPanGestureRecognizer",
+        "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+        "_UISwipeActionPanGestureRecognizer",
+        "_UISecondaryClickDriverGestureRecognizer",
+        "SwiftUI.UIHostingViewDebugLayer",
+        "ValueType:",
+        "EventType:",
+        "AttributeDataLength:",
+        "AttributeData:",
+        "SenderID:",
+        "Timestamp:",
+        "TransducerType:",
+        "TransducerIndex:",
+        "GenerationCount:",
+        "WillUpdateMask:",
+        "DidUpdateMask:",
+        "Pressure:",
+        "AuxiliaryPressure:",
+        "TiltX:",
+        "TiltY:",
+        "MajorRadius:",
+        "MinorRadius:",
+        "Accuracy:",
+        "Quality:",
+        "Density:",
+        "Irregularity:",
+        "Range:",
+        "Touch:",
+        "Events:",
+        "ChildEvents:",
+        "DisplayIntegrated:",
+        "BuiltIn:",
+        "EventMask:",
+        "ButtonMask:",
+        "Flags:",
+        "Identity:",
+        "Twist:",
+        "X:",
+        "Y:",
+        "Z:",
+        "Total Latency:",
+        "Timestamp type:",
     ]
 
     init() {
@@ -147,13 +197,29 @@ class Logger: ObservableObject {
     }
 
     private func shouldIgnore(_ message: String) -> Bool {
-        if message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            return true
+        }
+        if isNoiseLine(trimmed) {
             return true
         }
         for fragment in ignoredLogSubstrings {
             if message.contains(fragment) {
                 return true
             }
+        }
+        return false
+    }
+
+    private func isNoiseLine(_ line: String) -> Bool {
+        // filters tables / separators / brace spam
+        let allowed = CharacterSet(charactersIn: "0123456789-+|*.:(){}[]/\\_ \t")
+        if line.unicodeScalars.allSatisfy({ allowed.contains($0) }) {
+            return true
+        }
+        if line == ")}" || line == ")}," || line == ")}))" {
+            return true
         }
         return false
     }

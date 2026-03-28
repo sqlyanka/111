@@ -105,6 +105,16 @@ struct ContentView: View {
                             NavigationLink("Font Overwrite") {
                                 FontPicker(mgr: mgr)
                             }
+                            
+                            if 1 == 2 {
+                                NavigationLink("3 App Bypass") {
+                                    AppsView(mgr: mgr)
+                                }
+                                
+                                NavigationLink("MobileGestalt") {
+                                    EditorView()
+                                }
+                            }
                         }
                         
                         HStack {
