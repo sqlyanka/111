@@ -92,10 +92,10 @@ struct FontPicker: View {
                     }
                     
                     Button {
-                        applyfont("QuickSand", label: "QuickSand")
+                        applyfont("Copperplate", label: "Copperplate")
                     } label: {
-                        Text("QuickSand")
-                            .font(viewfont(resource: "QuickSand", size: 17))
+                        Text("Copperplate")
+                            .font(viewfont(resource: "Copperplate", size: 17))
                     }
                 } header: {
                     Text("Fonts")
